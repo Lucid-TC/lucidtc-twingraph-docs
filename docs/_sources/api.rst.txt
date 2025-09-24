@@ -1,0 +1,68 @@
+API Reference
+=============
+
+Core
+----
+
+.. automodule:: lucidtc_twingraph.core.twingraph
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: lucidtc_twingraph.core.twingraph_node
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: lucidtc_twingraph.core.twingraph_query
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Agents
+------
+
+.. automodule:: lucidtc_twingraph.agents.ai_agent_node
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: lucidtc_twingraph.agents.agent_tools
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Graph Datastores
+----------------
+
+.. automodule:: lucidtc_twingraph.graph_datastores.graph_datastores
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: lucidtc_twingraph.graph_datastores.tools
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+MQTT
+----
+
+.. automodule:: lucidtc_twingraph.mqtt.mqtt_broker_node
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: lucidtc_twingraph.mqtt.mqtt_topic_node
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+WebUI
+----
+
+.. automodule:: twingraph_webui.server
+   :members:
+   :undoc-members:
+   :show-inheritance:

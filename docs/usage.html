@@ -1,0 +1,459 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usage &mdash; TwinGraph SDK 0.2.0.dev3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=24f2d9cb"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            TwinGraph SDK
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-nodes">Add Nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-relationships">Create Relationships</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mqtt-nodes">MQTT Nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ai-agent-nodes">AI Agent Nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graph-datastore-nodes-neo4j">Graph DataStore Nodes (Neo4j)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#query-the-graph">Query the Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convenience-queries">Convenience Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#access-underlying-objects">Access Underlying Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inspect-graph-structure">Inspect Graph Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web-ui">Web UI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-web-ui-usage">Basic Web UI Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multiple-graphs-in-web-ui">Multiple Graphs in Web UI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-host-and-port">Custom Host and Port</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web-ui-features">Web UI Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">TwinGraph SDK</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Usage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h1>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lucidtc_twingraph</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tg</span>
+
+<span class="c1"># Create a TwinGraph</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraph</span><span class="p">(</span>
+    <span class="n">twingraph_id</span><span class="o">=</span><span class="s2">&quot;battery_twingraph_01&quot;</span><span class="p">,</span>
+    <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;battery-monitoring&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>  <span class="c1"># Human-readable summary</span>
+</pre></div>
+</div>
+</section>
+<section id="add-nodes">
+<h2>Add Nodes<a class="headerlink" href="#add-nodes" title="Link to this heading"></a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">TwinGraphNode</span></code> to represent devices, services, or data points, then add them to the graph.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lucidtc_twingraph</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tg</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraph</span><span class="p">(</span><span class="s2">&quot;battery_twingraph_01&quot;</span><span class="p">)</span>
+
+<span class="c1"># Define nodes</span>
+<span class="n">cell_a</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraphNode</span><span class="p">(</span>
+    <span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;cell_a&quot;</span><span class="p">,</span>
+    <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;voltage&quot;</span><span class="p">:</span> <span class="mf">3.7</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">25.2</span><span class="p">},</span>
+    <span class="n">node_type</span><span class="o">=</span><span class="s2">&quot;BatteryCell&quot;</span>
+<span class="p">)</span>
+<span class="n">sensor_1</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraphNode</span><span class="p">(</span>
+    <span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;sensor_1&quot;</span><span class="p">,</span>
+    <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;MAX17055&quot;</span><span class="p">},</span>
+    <span class="n">node_type</span><span class="o">=</span><span class="s2">&quot;Sensor&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Add nodes to the graph (an edge &quot;Contains&quot; from TwinGraph root is created)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_twingraph_node</span><span class="p">(</span><span class="n">cell_a</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_twingraph_node</span><span class="p">(</span><span class="n">sensor_1</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="create-relationships">
+<h2>Create Relationships<a class="headerlink" href="#create-relationships" title="Link to this heading"></a></h2>
+<p>Create edges between nodes to express topology or dependencies.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a relationship from Sensor -&gt; Cell (custom connection type)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_twingraph_relationship</span><span class="p">(</span>
+    <span class="n">source_twingraph_id</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">twingraph_id</span> <span class="o">+</span> <span class="s2">&quot;-node-sensor_1_1&quot;</span><span class="p">,</span>
+    <span class="n">target_twingraph_id</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">twingraph_id</span> <span class="o">+</span> <span class="s2">&quot;-node-cell_a_1&quot;</span><span class="p">,</span>
+    <span class="n">connection_type</span><span class="o">=</span><span class="s2">&quot;Measures&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Inspect edges (pairs of internal node indices)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="mqtt-nodes">
+<h2>MQTT Nodes<a class="headerlink" href="#mqtt-nodes" title="Link to this heading"></a></h2>
+<p>TwinGraph provides first-class nodes for MQTT connectivity and telemetry.</p>
+<ul class="simple">
+<li><p>MQTTBrokerNode: Represents a broker connection (connect, subscribe, route messages).</p></li>
+<li><p>MQTTTopicNode: Represents a topic subscription, stores rolling telemetry, and can link telemetry to other nodes.</p></li>
+</ul>
+<p>Add a broker, connect, and subscribe to topics:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lucidtc_twingraph.mqtt.mqtt_broker_node</span><span class="w"> </span><span class="kn">import</span> <span class="n">MQTTBrokerNode</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraph</span><span class="p">(</span><span class="s2">&quot;battery_twingraph_01&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create broker node</span>
+<span class="n">broker</span> <span class="o">=</span> <span class="n">MQTTBrokerNode</span><span class="p">(</span>
+    <span class="n">broker_host</span><span class="o">=</span><span class="s2">&quot;test.mosquitto.org&quot;</span><span class="p">,</span>
+    <span class="n">broker_port</span><span class="o">=</span><span class="mi">1883</span>
+<span class="p">)</span>
+
+<span class="c1"># Add broker as a node in the TwinGraph</span>
+<span class="c1"># Connection type defaults to &quot;MQTT_BROKER_CONNECTION&quot;</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_mqtt_broker_node</span><span class="p">(</span><span class="n">broker</span><span class="p">)</span>
+
+<span class="c1"># Connect</span>
+<span class="n">broker</span><span class="o">.</span><span class="n">set_parent_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>  <span class="c1"># usually set automatically by add_mqtt_broker_node</span>
+<span class="n">broker</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+<span class="c1"># Subscribe to a topic; a MQTTTopicNode is added under the broker</span>
+<span class="n">broker</span><span class="o">.</span><span class="n">subscribe_to_topic</span><span class="p">(</span><span class="s2">&quot;devices/battery/telemetry&quot;</span><span class="p">,</span> <span class="n">qos</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Query topic nodes</span>
+<span class="n">topics</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">find_mqtt_topics</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MQTT topics: </span><span class="si">{</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;twingraph_id&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">topics</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get latest topic telemetry (via broker helper)</span>
+<span class="n">latest</span> <span class="o">=</span> <span class="n">broker</span><span class="o">.</span><span class="n">get_topic_telemetry</span><span class="p">(</span><span class="s2">&quot;devices/battery/telemetry&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">latest</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Telemetry linking to twin nodes:
+- If a received payload includes a “twingraph_id” for an existing TwinGraph node,</p>
+<blockquote>
+<div><p>the corresponding node’s payload is updated and a relationship is created:
+MQTTTopicNode –GETS_TELEMETRY_FROM–&gt; TwinGraphNode.</p>
+</div></blockquote>
+<p>To remove a topic node from the graph (e.g., before unsubscribe), use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remove the topic node from the graph structure (does not unsubscribe)</span>
+<span class="c1"># graph.remove_mqtt_topic_node(topic_twingraph_id)</span>
+</pre></div>
+</div>
+</section>
+<section id="ai-agent-nodes">
+<h2>AI Agent Nodes<a class="headerlink" href="#ai-agent-nodes" title="Link to this heading"></a></h2>
+<p>AIAgentNode wraps an AI agent and automatically creates tool nodes representing its tools.  Currently, only AI Agents created using Google’s Agent Development Kit (ADK) are supported.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lucidtc_twingraph.agents.ai_agent_node</span><span class="w"> </span><span class="kn">import</span> <span class="n">AIAgentNode</span>
+<span class="c1"># Assume you have an Agent object configured elsewhere: my_agent</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraph</span><span class="p">(</span><span class="s2">&quot;battery_twingraph_01&quot;</span><span class="p">)</span>
+
+<span class="n">ai_node</span> <span class="o">=</span> <span class="n">AIAgentNode</span><span class="p">(</span>
+    <span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+    <span class="n">ai_agent</span><span class="o">=</span><span class="n">my_agent</span><span class="p">,</span>                 <span class="c1"># your agent instance</span>
+    <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;purpose&quot;</span><span class="p">:</span> <span class="s2">&quot;assist engineers&quot;</span><span class="p">},</span>
+    <span class="n">node_type</span><span class="o">=</span><span class="s2">&quot;AIAgentNode&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># When added to the TwinGraph, the agent&#39;s tools are auto-added as AIAgentToolNode</span>
+<span class="c1"># with connections of type &quot;TOOL_FOR_AI_AGENT&quot;</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_twingraph_node</span><span class="p">(</span><span class="n">ai_node</span><span class="p">)</span>
+
+<span class="c1"># Discover agent and its tool nodes</span>
+<span class="n">agents</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">by_node_type</span><span class="p">(</span><span class="s2">&quot;AIAgentNode&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="n">tools</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">by_node_type</span><span class="p">(</span><span class="s2">&quot;AIAgentToolNode&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Agents: </span><span class="si">{</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="s1">&#39;twingraph_id&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">agents</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tools: </span><span class="si">{</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;twingraph_id&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">tools</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Each AIAgentToolNode includes the actual AI Agent along with corresponding metadata such as tool name, type, and a reference
+to the underlying callable. You can traverse from the agent node to its tools
+via graph relationships or use queries by node type.</p>
+</section>
+<section id="graph-datastore-nodes-neo4j">
+<h2>Graph DataStore Nodes (Neo4j)<a class="headerlink" href="#graph-datastore-nodes-neo4j" title="Link to this heading"></a></h2>
+<p>Use GraphStoreNeo4jNode to connect your in-memory TwinGraph to Neo4j for persistence
+or to fetch remote graphs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lucidtc_twingraph.graph_datastores.graph_datastores</span><span class="w"> </span><span class="kn">import</span> <span class="n">GraphStoreNeo4jNode</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraph</span><span class="p">(</span><span class="s2">&quot;battery_twingraph_01&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create a GraphStore node</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">GraphStoreNeo4jNode</span><span class="p">(</span>
+    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;neo4j://localhost&quot;</span><span class="p">,</span>
+    <span class="n">auth_token</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;neo4j&quot;</span><span class="p">,</span> <span class="s2">&quot;twingraph&quot;</span><span class="p">),</span>
+    <span class="n">connection_name</span><span class="o">=</span><span class="s2">&quot;local_neo4j&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Attach to TwinGraph and connect to DB</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_graph_connection</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>  <span class="c1"># edge type &quot;GRAPH_DATASTORE_CONNECTION&quot;</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+<span class="c1"># Publish current TwinGraph nodes/edges to Neo4j</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">publish_to_graph_datastore</span><span class="p">()</span>
+
+<span class="c1"># Fetch nodes/edges of a remote TwinGraph by ID from Neo4j</span>
+<span class="n">remote</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">get_remote_twingraph_data</span><span class="p">(</span><span class="n">remote_twingraph_id</span><span class="o">=</span><span class="s2">&quot;some_other_graph_id&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">remote</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">],</span> <span class="n">remote</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">])</span>
+
+<span class="c1"># Disconnect when finished</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="query-the-graph">
+<h2>Query the Graph<a class="headerlink" href="#query-the-graph" title="Link to this heading"></a></h2>
+<p>Use the built-in query builder for flexible filtering.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># By node type</span>
+<span class="n">cells</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">by_node_type</span><span class="p">(</span><span class="s2">&quot;BatteryCell&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span><span class="si">}</span><span class="s2"> BatteryCell nodes&quot;</span><span class="p">)</span>
+
+<span class="c1"># By payload value on the AccessNode payload</span>
+<span class="n">sensors_by_model</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+         <span class="o">.</span><span class="n">by_node_type</span><span class="p">(</span><span class="s2">&quot;Sensor&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">by_payload_value</span><span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="s2">&quot;MAX17055&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># First matching result</span>
+<span class="n">first_cell</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">by_node_type</span><span class="p">(</span><span class="s2">&quot;BatteryCell&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">first_cell</span><span class="p">)</span>
+
+<span class="c1"># Count matches</span>
+<span class="n">num_sensors</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">by_node_type</span><span class="p">(</span><span class="s2">&quot;Sensor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">num_sensors</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="convenience-queries">
+<h2>Convenience Queries<a class="headerlink" href="#convenience-queries" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># All nodes of a given type</span>
+<span class="n">cells</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">find_nodes_by_type</span><span class="p">(</span><span class="s2">&quot;BatteryCell&quot;</span><span class="p">)</span>
+
+<span class="c1"># Nodes whose payload contains a specific key/value</span>
+<span class="n">max_voltage_nodes</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">find_nodes_by_payload</span><span class="p">(</span><span class="s2">&quot;voltage&quot;</span><span class="p">,</span> <span class="mf">3.7</span><span class="p">)</span>
+
+<span class="c1"># Unique node types present</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">get_all_node_types</span><span class="p">())</span>
+
+<span class="c1"># Summary counts by node type</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">get_nodes_summary</span><span class="p">())</span>
+
+<span class="c1"># If your graph includes MQTT topic nodes, you can search by topic</span>
+<span class="c1"># (returns [] if none exist)</span>
+<span class="n">mqtt_topics</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">find_mqtt_topics</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="s2">&quot;devices/battery/telemetry&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="access-underlying-objects">
+<h2>Access Underlying Objects<a class="headerlink" href="#access-underlying-objects" title="Link to this heading"></a></h2>
+<p>Each graph node stores an “AccessNode” (e.g., your <code class="docutils literal notranslate"><span class="pre">TwinGraphNode</span></code>, <code class="docutils literal notranslate"><span class="pre">MQTTBrokerNode</span></code>,
+<code class="docutils literal notranslate"><span class="pre">MQTTTopicNode</span></code>, or datastore node). You can retrieve it to interact with domain logic.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use the TwinGraphID from a query result to get the AccessNode</span>
+<span class="n">cell_result</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">by_node_type</span><span class="p">(</span><span class="s2">&quot;BatteryCell&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">cell_result</span><span class="p">:</span>
+    <span class="n">twingraph_id</span> <span class="o">=</span> <span class="n">cell_result</span><span class="p">[</span><span class="s2">&quot;twingraph_id&quot;</span><span class="p">]</span>
+    <span class="n">access_obj</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">access_node</span><span class="p">(</span><span class="n">twingraph_id</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">access_obj</span><span class="p">),</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">access_obj</span><span class="p">,</span> <span class="s2">&quot;payload&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="inspect-graph-structure">
+<h2>Inspect Graph Structure<a class="headerlink" href="#inspect-graph-structure" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Raw node indices</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">node_indices</span><span class="p">())</span>
+
+<span class="c1"># Node data payloads (dicts stored in the internal graph)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+
+<span class="c1"># Edge list (index pairs)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+
+<span class="c1"># Edge index -&gt; (u, v, payload)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">edge_index_map</span><span class="p">())</span>
+
+<span class="c1"># Get a specific node&#39;s stored data by TwinGraphID</span>
+<span class="n">node_data</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">get_node_data_by_twingraph_id</span><span class="p">(</span><span class="n">twingraph_id</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">node_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="web-ui">
+<h2>Web UI<a class="headerlink" href="#web-ui" title="Link to this heading"></a></h2>
+<p>TwinGraph provides a web-based user interface for visualizing and interacting with your graphs.
+The web UI can be launched as a daemon thread, allowing your main application to continue running
+while providing a browser-based interface for graph inspection and manipulation.</p>
+<section id="basic-web-ui-usage">
+<h3>Basic Web UI Usage<a class="headerlink" href="#basic-web-ui-usage" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">lucidtc_twingraph</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">twingraph_webui</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ui</span>
+
+<span class="c1"># Create a TwinGraph</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraph</span><span class="p">(</span>
+    <span class="n">twingraph_id</span><span class="o">=</span><span class="s2">&quot;battery_twingraph_01&quot;</span><span class="p">,</span>
+    <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;project&quot;</span><span class="p">:</span> <span class="s2">&quot;battery-monitoring&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Add some nodes to visualize</span>
+<span class="n">cell_a</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraphNode</span><span class="p">(</span>
+    <span class="n">node_id</span><span class="o">=</span><span class="s2">&quot;cell_a&quot;</span><span class="p">,</span>
+    <span class="n">payload</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;voltage&quot;</span><span class="p">:</span> <span class="mf">3.7</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">25.2</span><span class="p">},</span>
+    <span class="n">node_type</span><span class="o">=</span><span class="s2">&quot;BatteryCell&quot;</span>
+<span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_twingraph_node</span><span class="p">(</span><span class="n">cell_a</span><span class="p">)</span>
+
+<span class="c1"># Create a dictionary of graphs to display in the UI</span>
+<span class="n">graphs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Battery Twin&quot;</span><span class="p">:</span> <span class="n">graph</span><span class="p">}</span>
+
+<span class="c1"># Start the web UI on port 8000 (default)</span>
+<span class="n">ui</span><span class="o">.</span><span class="n">start_ui</span><span class="p">(</span><span class="n">graphs</span><span class="p">,</span> <span class="n">console_ns</span><span class="o">=</span><span class="nb">globals</span><span class="p">(),</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Web UI started at http://127.0.0.1:8000&quot;</span><span class="p">)</span>
+<span class="c1"># Your application continues running...</span>
+</pre></div>
+</div>
+</section>
+<section id="multiple-graphs-in-web-ui">
+<h3>Multiple Graphs in Web UI<a class="headerlink" href="#multiple-graphs-in-web-ui" title="Link to this heading"></a></h3>
+<p>You can display multiple TwinGraphs in the web UI by providing a dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create multiple graphs</span>
+<span class="n">battery_graph</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraph</span><span class="p">(</span><span class="s2">&quot;battery_system&quot;</span><span class="p">)</span>
+<span class="n">sensor_graph</span> <span class="o">=</span> <span class="n">tg</span><span class="o">.</span><span class="n">TwinGraph</span><span class="p">(</span><span class="s2">&quot;sensor_network&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add nodes to each graph</span>
+<span class="c1"># ... add your nodes here ...</span>
+
+<span class="c1"># Display both graphs in the UI</span>
+<span class="n">graphs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Battery System&quot;</span><span class="p">:</span> <span class="n">battery_graph</span><span class="p">,</span>
+    <span class="s2">&quot;Sensor Network&quot;</span><span class="p">:</span> <span class="n">sensor_graph</span>
+<span class="p">}</span>
+
+<span class="n">ui</span><span class="o">.</span><span class="n">start_ui</span><span class="p">(</span><span class="n">graphs</span><span class="p">,</span> <span class="n">console_ns</span><span class="o">=</span><span class="nb">globals</span><span class="p">(),</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-host-and-port">
+<h3>Custom Host and Port<a class="headerlink" href="#custom-host-and-port" title="Link to this heading"></a></h3>
+<p>You can customize the host interface and port:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start UI on all interfaces, port 3000</span>
+<span class="n">ui</span><span class="o">.</span><span class="n">start_ui</span><span class="p">(</span><span class="n">graphs</span><span class="p">,</span> <span class="n">console_ns</span><span class="o">=</span><span class="nb">globals</span><span class="p">(),</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="web-ui-features">
+<h3>Web UI Features<a class="headerlink" href="#web-ui-features" title="Link to this heading"></a></h3>
+<p>The web UI provides:</p>
+<ul class="simple">
+<li><p><strong>Graph Visualization</strong>: Interactive node and edge display</p></li>
+<li><p><strong>Node Inspection</strong>: Click nodes to view their payload data and properties</p></li>
+<li><p><strong>Real-time Updates</strong>: Graphs update automatically as your application modifies them</p></li>
+<li><p><strong>Console Integration</strong>: Access to your application’s namespace for debugging</p></li>
+<li><p><strong>Multi-graph Support</strong>: Switch between different TwinGraphs in the same UI</p></li>
+</ul>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The web UI runs as a daemon thread and will not prevent your program from terminating</p></li>
+<li><p>The UI is accessible via web browser at the specified host and port</p></li>
+<li><p>Multiple graphs can be managed from a single UI instance</p></li>
+<li><p>The console namespace parameter allows the UI to interact with your application’s variables</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Lucid TC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

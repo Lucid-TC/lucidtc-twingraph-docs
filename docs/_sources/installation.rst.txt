@@ -1,0 +1,65 @@
+Installation
+============
+
+Prerequisites
+-------------
+
+- Python 3.10 or higher
+
+Download TwinGraph SDK
+--------------------
+
+TwinGraph SDK is hosted on a private PyPI server. You will need your TwinGraph SDK License Key to install it into your projects.
+
+TwinGraph SDK can be added to your project using any Python package manager. We recommend using UV.
+
+Download with UV (Recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+   uv add lucidtc-twingraph --index https://license:{YOUR_TWINGRAPH_SDK_LICENSE_KEY}@pypi.pkg.keygen.sh/0f503c10-6201-4e78-8224-4eef221f10b5/simple
+
+Download with Pip
+~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+   pip install lucidtc-twingraph --index-url https://license:{YOUR_TWINGRAPH_SDK_LICENSE_KEY}@pypi.pkg.keygen.sh/0f503c10-6201-4e78-8224-4eef221f10b5/simple
+
+.. note::
+   When using pip, you may need to specify a version, e.g., ``lucidtc-twingraph=={version}``.
+
+Replace ``{YOUR_TWINGRAPH_SDK_LICENSE_KEY}`` with your license key.
+
+Activate TwinGraph SDK
+--------------------
+
+After downloading TwinGraph SDK into your project directory, it must be activated with a valid TwinGraph SDK License Key. To do this, create a ``.twingraph`` file in your project root directory with the following variables:
+
+.. code-block::
+   :caption: .twingraph
+
+   TWINGRAPH_LICENSE_ACCOUNT=0f503c10-6201-4e78-8224-4eef221f10b5
+   TWINGRAPH_LICENSE_KEY=YOUR_TWINGRAPH_SDK_LICENSE_KEY
+
+Ensure you replace ``YOUR_TWINGRAPH_SDK_LICENSE_KEY`` with your actual TwinGraph SDK License Key.
+
+Importing TwinGraph SDK into your Project
+-----------------------------------------
+
+To import TwinGraph SDK, simply add ``import lucidtc_twingraph`` in your Python scripts. Try it out with the below example:
+
+.. code-block:: python
+
+   import lucidtc_twingraph as tg
+
+   # Create your first TwinGraph
+   battery_twin = tg.TwinGraph (
+       twingraph_id='my_first_twingraph',
+       payload={"max_voltage": 10}
+   )
+
+   # Print your TwinGraph to the Console
+   print(battery_twin)
+```
