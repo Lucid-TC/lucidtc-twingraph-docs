@@ -1,0 +1,365 @@
+Usage
+=====
+
+Quick Start
+-----------
+
+.. code-block:: python
+
+   import lucidtc_twingraph as tg
+
+   # Create a TwinGraph
+   graph = tg.TwinGraph(
+       twingraph_id="battery_twingraph_01",
+       payload={"project": "battery-monitoring"}
+   )
+
+   print(graph)  # Human-readable summary
+
+
+Add Nodes
+---------
+
+Use ``TwinGraphNode`` to represent devices, services, or data points, then add them to the graph.
+
+.. code-block:: python
+
+   import lucidtc_twingraph as tg
+
+   graph = tg.TwinGraph("battery_twingraph_01")
+
+   # Define nodes
+   cell_a = tg.TwinGraphNode(
+       node_id="cell_a",
+       payload={"voltage": 3.7, "temperature": 25.2},
+       node_type="BatteryCell"
+   )
+   sensor_1 = tg.TwinGraphNode(
+       node_id="sensor_1",
+       payload={"model": "MAX17055"},
+       node_type="Sensor"
+   )
+
+   # Add nodes to the graph (an edge "Contains" from TwinGraph root is created)
+   graph.add_twingraph_node(cell_a)
+   graph.add_twingraph_node(sensor_1)
+
+
+Create Relationships
+--------------------
+
+Create edges between nodes to express topology or dependencies.
+
+.. code-block:: python
+
+   # Create a relationship from Sensor -> Cell (custom connection type)
+   graph.add_twingraph_relationship(
+       source_twingraph_id=graph.twingraph_id + "-node-sensor_1_1",
+       target_twingraph_id=graph.twingraph_id + "-node-cell_a_1",
+       connection_type="Measures"
+   )
+
+   # Inspect edges (pairs of internal node indices)
+   print(graph.edges())
+
+
+MQTT Nodes
+----------
+
+TwinGraph provides first-class nodes for MQTT connectivity and telemetry.
+
+- MQTTBrokerNode: Represents a broker connection (connect, subscribe, route messages).
+- MQTTTopicNode: Represents a topic subscription, stores rolling telemetry, and can link telemetry to other nodes.
+
+Add a broker, connect, and subscribe to topics:
+
+.. code-block:: python
+
+   from lucidtc_twingraph.mqtt.mqtt_broker_node import MQTTBrokerNode
+
+   graph = tg.TwinGraph("battery_twingraph_01")
+
+   # Create broker node
+   broker = MQTTBrokerNode(
+       broker_host="test.mosquitto.org",
+       broker_port=1883
+   )
+
+   # Add broker as a node in the TwinGraph
+   # Connection type defaults to "MQTT_BROKER_CONNECTION"
+   graph.add_mqtt_broker_node(broker)
+
+   # Connect
+   broker.set_parent_graph(graph)  # usually set automatically by add_mqtt_broker_node
+   broker.connect()
+
+   # Subscribe to a topic; a MQTTTopicNode is added under the broker
+   broker.subscribe_to_topic("devices/battery/telemetry", qos=0)
+
+   # Query topic nodes
+   topics = graph.find_mqtt_topics()
+   print(f"MQTT topics: {[t['twingraph_id'] for t in topics]}")
+
+   # Get latest topic telemetry (via broker helper)
+   latest = broker.get_topic_telemetry("devices/battery/telemetry", count=5)
+   print(latest)
+
+Telemetry linking to twin nodes:
+- If a received payload includes a "twingraph_id" for an existing TwinGraph node,
+  the corresponding node's payload is updated and a relationship is created:
+  MQTTTopicNode --GETS_TELEMETRY_FROM--> TwinGraphNode.
+
+To remove a topic node from the graph (e.g., before unsubscribe), use:
+
+.. code-block:: python
+
+   # Remove the topic node from the graph structure (does not unsubscribe)
+   # graph.remove_mqtt_topic_node(topic_twingraph_id)
+
+
+AI Agent Nodes
+--------------
+
+AIAgentNode wraps an AI agent and automatically creates tool nodes representing its tools.  Currently, only AI Agents created using Google's Agent Development Kit (ADK) are supported.
+
+.. code-block:: python
+
+   from lucidtc_twingraph.agents.ai_agent_node import AIAgentNode
+   # Assume you have an Agent object configured elsewhere: my_agent
+
+   graph = tg.TwinGraph("battery_twingraph_01")
+
+   ai_node = AIAgentNode(
+       node_id="assistant",
+       ai_agent=my_agent,                 # your agent instance
+       payload={"purpose": "assist engineers"},
+       node_type="AIAgentNode"
+   )
+
+   # When added to the TwinGraph, the agent's tools are auto-added as AIAgentToolNode
+   # with connections of type "TOOL_FOR_AI_AGENT"
+   graph.add_twingraph_node(ai_node)
+
+   # Discover agent and its tool nodes
+   agents = graph.query().by_node_type("AIAgentNode").execute()
+   tools = graph.query().by_node_type("AIAgentToolNode").execute()
+
+   print(f"Agents: {[a['twingraph_id'] for a in agents]}")
+   print(f"Tools: {[t['twingraph_id'] for t in tools]}")
+
+Each AIAgentToolNode includes the actual AI Agent along with corresponding metadata such as tool name, type, and a reference
+to the underlying callable. You can traverse from the agent node to its tools
+via graph relationships or use queries by node type.
+
+
+Graph DataStore Nodes (Neo4j)
+-----------------------------
+
+Use GraphStoreNeo4jNode to connect your in-memory TwinGraph to Neo4j for persistence
+or to fetch remote graphs.
+
+.. code-block:: python
+
+   from lucidtc_twingraph.graph_datastores.graph_datastores import GraphStoreNeo4jNode
+
+   graph = tg.TwinGraph("battery_twingraph_01")
+
+   # Create a GraphStore node
+   gs = GraphStoreNeo4jNode(
+       uri="neo4j://localhost",
+       auth_token=("neo4j", "twingraph"),
+       connection_name="local_neo4j"
+   )
+
+   # Attach to TwinGraph and connect to DB
+   graph.add_graph_connection(gs)  # edge type "GRAPH_DATASTORE_CONNECTION"
+   gs.connect()
+
+   # Publish current TwinGraph nodes/edges to Neo4j
+   gs.publish_to_graph_datastore()
+
+   # Fetch nodes/edges of a remote TwinGraph by ID from Neo4j
+   remote = gs.get_remote_twingraph_data(remote_twingraph_id="some_other_graph_id")
+   print(remote["nodes"], remote["edges"])
+
+   # Disconnect when finished
+   gs.disconnect()
+
+
+Query the Graph
+---------------
+
+Use the built-in query builder for flexible filtering.
+
+.. code-block:: python
+
+   # By node type
+   cells = graph.query().by_node_type("BatteryCell").execute()
+   print(f"Found {len(cells)} BatteryCell nodes")
+
+   # By payload value on the AccessNode payload
+   sensors_by_model = (
+       graph.query()
+            .by_node_type("Sensor")
+            .by_payload_value("model", "MAX17055")
+            .execute()
+   )
+
+   # First matching result
+   first_cell = graph.query().by_node_type("BatteryCell").first()
+   print(first_cell)
+
+   # Count matches
+   num_sensors = graph.query().by_node_type("Sensor").count()
+   print(num_sensors)
+
+
+Convenience Queries
+-------------------
+
+.. code-block:: python
+
+   # All nodes of a given type
+   cells = graph.find_nodes_by_type("BatteryCell")
+
+   # Nodes whose payload contains a specific key/value
+   max_voltage_nodes = graph.find_nodes_by_payload("voltage", 3.7)
+
+   # Unique node types present
+   print(graph.get_all_node_types())
+
+   # Summary counts by node type
+   print(graph.get_nodes_summary())
+
+   # If your graph includes MQTT topic nodes, you can search by topic
+   # (returns [] if none exist)
+   mqtt_topics = graph.find_mqtt_topics(topic="devices/battery/telemetry")
+
+
+Access Underlying Objects
+-------------------------
+
+Each graph node stores an "AccessNode" (e.g., your ``TwinGraphNode``, ``MQTTBrokerNode``,
+``MQTTTopicNode``, or datastore node). You can retrieve it to interact with domain logic.
+
+.. code-block:: python
+
+   # Use the TwinGraphID from a query result to get the AccessNode
+   cell_result = graph.query().by_node_type("BatteryCell").first()
+   if cell_result:
+       twingraph_id = cell_result["twingraph_id"]
+       access_obj = graph.access_node(twingraph_id)
+       print(type(access_obj), getattr(access_obj, "payload", None))
+
+
+Inspect Graph Structure
+-----------------------
+
+.. code-block:: python
+
+   # Raw node indices
+   print(graph.node_indices())
+
+   # Node data payloads (dicts stored in the internal graph)
+   print(graph.nodes())
+
+   # Edge list (index pairs)
+   print(graph.edges())
+
+   # Edge index -> (u, v, payload)
+   print(graph.edge_index_map())
+
+   # Get a specific node's stored data by TwinGraphID
+   node_data = graph.get_node_data_by_twingraph_id(twingraph_id)
+   print(node_data)
+
+Web UI
+------
+
+TwinGraph provides a web-based user interface for visualizing and interacting with your graphs.
+The web UI can be launched as a daemon thread, allowing your main application to continue running
+while providing a browser-based interface for graph inspection and manipulation.
+
+Basic Web UI Usage
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   import lucidtc_twingraph as tg
+   import twingraph_webui as ui
+
+   # Create a TwinGraph
+   graph = tg.TwinGraph(
+       twingraph_id="battery_twingraph_01",
+       payload={"project": "battery-monitoring"}
+   )
+
+   # Add some nodes to visualize
+   cell_a = tg.TwinGraphNode(
+       node_id="cell_a",
+       payload={"voltage": 3.7, "temperature": 25.2},
+       node_type="BatteryCell"
+   )
+   graph.add_twingraph_node(cell_a)
+
+   # Create a dictionary of graphs to display in the UI
+   graphs = {"Battery Twin": graph}
+
+   # Start the web UI on port 8000 (default)
+   ui.start_ui(graphs, console_ns=globals(), port=8000)
+
+   print("Web UI started at http://127.0.0.1:8000")
+   # Your application continues running...
+
+Multiple Graphs in Web UI
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can display multiple TwinGraphs in the web UI by providing a dictionary:
+
+.. code-block:: python
+
+   # Create multiple graphs
+   battery_graph = tg.TwinGraph("battery_system")
+   sensor_graph = tg.TwinGraph("sensor_network")
+   
+   # Add nodes to each graph
+   # ... add your nodes here ...
+
+   # Display both graphs in the UI
+   graphs = {
+       "Battery System": battery_graph,
+       "Sensor Network": sensor_graph
+   }
+
+   ui.start_ui(graphs, console_ns=globals(), port=8000)
+
+
+Custom Host and Port
+~~~~~~~~~~~~~~~~~~~
+
+You can customize the host interface and port:
+
+.. code-block:: python
+
+   # Start UI on all interfaces, port 3000
+   ui.start_ui(graphs, console_ns=globals(), host="0.0.0.0", port=3000)
+
+
+Web UI Features
+~~~~~~~~~~~~~~~
+
+The web UI provides:
+
+- **Graph Visualization**: Interactive node and edge display
+- **Node Inspection**: Click nodes to view their payload data and properties
+- **Real-time Updates**: Graphs update automatically as your application modifies them
+- **Console Integration**: Access to your application's namespace for debugging
+- **Multi-graph Support**: Switch between different TwinGraphs in the same UI
+
+Notes
+~~~~~
+
+- The web UI runs as a daemon thread and will not prevent your program from terminating
+- The UI is accessible via web browser at the specified host and port
+- Multiple graphs can be managed from a single UI instance
+- The console namespace parameter allows the UI to interact with your application's variables
